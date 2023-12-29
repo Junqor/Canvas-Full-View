@@ -1,11 +1,10 @@
 // ====== Previous/Next Footer =======
 
-function $(sel) {return document.querySelector(sel)}
+function $(elem) {return document.querySelector(elem)}
 let nextbar = $("#sequence_footer");
 
 if (nextbar) {
-   var nextbarParent = nextbar.parentNode;
-   nextbar.remove();
+   var nextbarParent = nextbar.style.display;
 }
 else {
    console.log("couldnt find nextbar");
@@ -16,8 +15,7 @@ else {
 let leftLinksColumn = $("#left-side");
 
 if (leftLinksColumn) {
-   var leftLinksParent = leftLinksColumn.parentNode;
-   leftLinksColumn.remove();
+   var leftLinksParent = leftLinksColumn.style.display;
 }
 else {
    console.log("couldnt find leftlc");
@@ -26,8 +24,7 @@ else {
 let topBar = $(".ic-app-nav-toggle-and-crumbs.no-print");
 
 if (topBar) {
-   var topBarParent = topBar.parentNode;
-   topBar.remove();
+   var topBarParent = topBar.style.display;
 }
 else {
    console.log("couldnt find topbar");
@@ -39,8 +36,6 @@ let padding1 = $("#wrapper.ic-Layout-wrapper")
 if (layout && padding1) {
    var layoutMargin = layout.style.marginLeft;
    var padding1Margin = padding1.style.marginLeft;
-   layout.style.marginLeft = 0;
-   padding1.style.marginLeft = 0;
 }
 else {
    console.log("couldnt find layout or padding1");
@@ -54,10 +49,6 @@ if (content) {
    var paddingRight = content.style.paddingRight
    var paddingBottom = content.style.paddingBottom
    var paddingLeft = content.style.paddingLeft
-   content.style.paddingTop = "0";
-   content.style.paddingRight = "0";
-   content.style.paddingBottom = "0";
-   content.style.paddingLeft = "0";
 }
 else {
    console.log("couldnt find content");
@@ -68,7 +59,6 @@ let navBar = $("#header.ic-app-header.no-print");
 
 if (navBar) {
    var navBarParent = navBar.parentNode;
-   navBar.remove();
 }
 else {
    console.log("couldnt find NavBar");
@@ -79,7 +69,6 @@ else {
 let heading = $("h2");
 if (heading) {
    var headingParent = heading.parentNode;
-   heading.remove();
 }
 else {
    console.log("couldnt find heading");
@@ -89,8 +78,7 @@ else {
 let targetSpan = $('div > span > a[download="true"]');
 if (targetSpan) {
    var subHeading = targetSpan.parentNode.parentNode;
-   var subHeadingParent = subHeading.parentNode;
-   subHeading.remove();
+   var subHeadingParent = subHeading.style.display;
 } else {
    console.log("subHeading not found");
 }
@@ -102,44 +90,42 @@ chrome.runtime.onMessage.addListener((message) => {
    console.log("Message Received");
    // Check the message
    if (message.action === 'turnOn') {
-      console.log('Extension turned ON');
       EnterFullScreen();
    }
    else if (message.action === 'turnOff') {
-      console.log('Extension turned OFF');
       ExitFullScreen();
    }
 });
 
 function EnterFullScreen() {
-   nextbar.remove();
-   leftLinksColumn.remove();
-   topBar.remove();
-   layout.style.marginLeft = 0;
-   padding1.style.marginLeft = 0;
-   content.style.width = '100%';
-   content.style.height = '100%';
-   content.style.margin = '0';
-   content.style.padding = '0';
-   navBar.remove();
-   heading.remove();
-   subHeading.remove();
+   nextbar.style.display = 'none';
+   leftLinksColumn.style.display = 'none';
+   topBar.style.display = 'none';
+   layout.style.marginLeft = "0";
+   padding1.style.marginLeft = "0";
+   content.style.paddingTop = "0";
+   content.style.paddingRight = "0";
+   content.style.paddingBottom = "0";
+   content.style.paddingLeft = "0";
+   navBar.style.display = 'none';
+   heading.style.display = 'none';
+   subHeading.style.display = 'none';
    console.log("Entered Full Screen!")
 }
 
 // Exit full screen by reversing changes in reverse order
 function ExitFullScreen() {
-   subHeadingParent.insertBefore(subHeading, subHeadingParent.firstChild);
-   headingParent.insertBefore(heading, headingParent.firstChild);
-   navBarParent.insertBefore(navBar, navBarParent.firstChild.nextSibling.nextSibling.nextSibling);
+   subHeading.style.display = subHeadingParent
+   heading.style.display = "block";
+   navBar.style.display = "block";
    content.style.paddingBottom = paddingBottom
    content.style.paddingTop = paddingTop
    content.style.paddingLeft = paddingLeft
    content.style.paddingRight = paddingRight
    layout.style.marginLeft = layoutMargin
    padding1.style.marginLeft = padding1Margin
-   topBarParent.insertBefore(topBar, topBarParent.firstChild);
-   leftLinksParent.insertBefore(leftLinksColumn, leftLinksParent.firstChild.nextSibling.nextSibling);
-   nextbarParent.appendChild(nextbar)
+   topBar.style.display = topBarParent;
+   leftLinksColumn.style.display = leftLinksParent;
+   nextbar.style.display = nextbarParent;
    console.log("Page Restored!")
 }

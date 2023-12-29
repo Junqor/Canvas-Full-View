@@ -4,7 +4,11 @@ chrome.runtime.onStartup.addListener(() => {
    chrome.action.setBadgeText({
       text: "ON",
    })
- });
+   // Enter fullscreen on startup
+   chrome.tabs.sendMessage( tab.id, { action: 'turnOn' })
+});
+
+
 
 chrome.action.onClicked.addListener(async (tab) => {
 
