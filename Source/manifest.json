@@ -1,0 +1,18 @@
+{
+   "manifest_version": 3,
+   "name": "Canvas Fullscreen Tab",
+   "version": "0.1",
+   "description": "Makes Canvas files take up the whole window to faciliatate multitasking on a single screen",
+   "action": {
+      "default_icon": "images/Canvas.png"
+   },
+   "background": {
+      "service_worker": "scripts/background.js",
+      "matches": ["https://fresnostate.instructure.com/courses/*/files/*"]
+   },
+   "permissions": ["activeTab", "scripting", "declarativeContent"],
+   "content_scripts": [{
+      "matches": ["https://fresnostate.instructure.com/courses/*/files/*"],
+      "js": ["scripts/content.js"]
+   }]
+}
