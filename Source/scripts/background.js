@@ -8,8 +8,6 @@ chrome.runtime.onStartup.addListener(() => {
    chrome.tabs.sendMessage( tab.id, { action: 'turnOn' })
 });
 
-
-
 chrome.action.onClicked.addListener(async (tab) => {
 
    // Retrieve the action badge to check if the extension is 'ON' or 'OFF'

@@ -1,50 +1,32 @@
-// ====== Previous/Next Footer =======
-
 function $(elem) {return document.querySelector(elem)}
+
+// ====== Previous/Next Footer =======
 let nextbar = $("#sequence_footer");
 
-if (nextbar) {
-   var nextbarParent = nextbar.style.display;
-}
-else {
-   console.log("couldnt find nextbar");
-}
-
-// ====== Left Side Navigation
-
+// ====== Left Side Navigation =======
 let leftLinksColumn = $("#left-side");
 
-if (leftLinksColumn) {
-   var leftLinksParent = leftLinksColumn.style.display;
-}
-else {
-   console.log("couldnt find leftlc");
-}
-// ======= Top Bar
+// ======= Top Bar =======
 let topBar = $(".ic-app-nav-toggle-and-crumbs.no-print");
 
-if (topBar) {
-   var topBarParent = topBar.style.display;
-}
-else {
-   console.log("couldnt find topbar");
-}
-// ======= Left Margin
+// ======= Left Margin =======
 let layout = $("#main.ic-Layout-columns");
-let padding1 = $("#wrapper.ic-Layout-wrapper")
+let padding = $("#wrapper.ic-Layout-wrapper")
 
-if (layout && padding1) {
+if (layout && padding) {
+   // Save original state to use when restoring
    var layoutMargin = layout.style.marginLeft;
-   var padding1Margin = padding1.style.marginLeft;
+   var paddingMargin = padding.style.marginLeft;
 }
 else {
-   console.log("couldnt find layout or padding1");
+   console.log("couldnt find layout or padding");
 }
 
 // ======= Format Media ========
 let content = $("#content");
 
 if (content) {
+   // Save original state to use when restoring
    var paddingTop = content.style.paddingTop
    var paddingRight = content.style.paddingRight
    var paddingBottom = content.style.paddingBottom
@@ -54,36 +36,21 @@ else {
    console.log("couldnt find content");
 }
 
-// ======= Navigation ========
+// ======= Leftmost Navigation Column ========
 let navBar = $("#header.ic-app-header.no-print");
 
-if (navBar) {
-   var navBarParent = navBar.parentNode;
-}
-else {
-   console.log("couldnt find NavBar");
-}
-
-
-//======= Heading =======
+//======= Title Heading =======
 let heading = $("h2");
-if (heading) {
-   var headingParent = heading.parentNode;
-}
-else {
-   console.log("couldnt find heading");
-}
 
-//====== TargetSpan Parent (Txt above file)
+//====== Download Links below Title =======
 let targetSpan = $('div > span > a[download="true"]');
 if (targetSpan) {
    var subHeading = targetSpan.parentNode.parentNode;
-   var subHeadingParent = subHeading.style.display;
 } else {
    console.log("subHeading not found");
 }
 
-console.log("script loaded");
+console.log("Script loaded");
 
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener((message) => {
@@ -97,12 +64,13 @@ chrome.runtime.onMessage.addListener((message) => {
    }
 });
 
+// Enter Full Screen by hiding all elements except the content
 function EnterFullScreen() {
    nextbar.style.display = 'none';
    leftLinksColumn.style.display = 'none';
    topBar.style.display = 'none';
    layout.style.marginLeft = "0";
-   padding1.style.marginLeft = "0";
+   padding.style.marginLeft = "0";
    content.style.paddingTop = "0";
    content.style.paddingRight = "0";
    content.style.paddingBottom = "0";
@@ -113,19 +81,19 @@ function EnterFullScreen() {
    console.log("Entered Full Screen!")
 }
 
-// Exit full screen by reversing changes in reverse order
+// Exit full screen by reversing changes
 function ExitFullScreen() {
-   subHeading.style.display = subHeadingParent
+   subHeading.style.display = "block";
    heading.style.display = "block";
-   navBar.style.display = "block";
+   navBar.style.display = "flex";
    content.style.paddingBottom = paddingBottom
    content.style.paddingTop = paddingTop
    content.style.paddingLeft = paddingLeft
    content.style.paddingRight = paddingRight
    layout.style.marginLeft = layoutMargin
-   padding1.style.marginLeft = padding1Margin
-   topBar.style.display = topBarParent;
-   leftLinksColumn.style.display = leftLinksParent;
-   nextbar.style.display = nextbarParent;
+   padding.style.marginLeft = paddingMargin
+   topBar.style.display = "flex";
+   leftLinksColumn.style.display = "block";
+   nextbar.style.display = "block";
    console.log("Page Restored!")
 }
