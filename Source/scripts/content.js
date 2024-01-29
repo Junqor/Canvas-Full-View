@@ -1,5 +1,7 @@
 function $(elem) {return document.querySelector(elem)}
 
+var fileContent = null;
+
 // ====== Previous/Next Footer =======
 let nextbar = $("#sequence_footer");
 
@@ -66,6 +68,9 @@ chrome.runtime.onMessage.addListener((message) => {
 
 // Enter Full Screen by hiding all elements except the content
 function EnterFullScreen() {
+   if (!fileContent) {
+      fileContent = $("#doc_preview > div")
+   }
    nextbar.style.display = 'none';
    leftLinksColumn.style.display = 'none';
    topBar.style.display = 'none';
@@ -78,7 +83,8 @@ function EnterFullScreen() {
    navBar.style.display = 'none';
    heading.style.display = 'none';
    subHeading.style.display = 'none';
-   console.log("Entered Full Screen!")
+   console.log("Entered Full Screen!");
+   fileContent.style.overflow = 'visible';
 }
 
 // Exit full screen by reversing changes
@@ -95,5 +101,6 @@ function ExitFullScreen() {
    topBar.style.display = "flex";
    leftLinksColumn.style.display = "block";
    nextbar.style.display = "block";
+   fileContent.style.overflow = 'auto';
    console.log("Page Restored!")
 }
