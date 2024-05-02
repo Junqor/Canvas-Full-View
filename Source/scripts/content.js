@@ -1,107 +1,126 @@
-function $(elem) {return document.querySelector(elem)}
+// Activate Content Script on Matched sites
+let isActive = RegExp("https:\/\/fresnostate\.instructure\.com\/courses\/.*\/files\/.*").test(location.href);
 
-var fileContent = null;
-// test
-
-// ====== Previous/Next Footer =======
-let nextbar = $("#sequence_footer");
-
-// ====== Left Side Navigation =======
-let leftLinksColumn = $("#left-side");
-
-// ======= Top Bar =======
-let topBar = $(".ic-app-nav-toggle-and-crumbs.no-print");
-
-// ======= Left Margin =======
-let layout = $("#main.ic-Layout-columns");
-let padding = $("#wrapper.ic-Layout-wrapper")
-
-if (layout && padding) {
-   // Save original state to use when restoring
-   var layoutMargin = layout.style.marginLeft;
-   var paddingMargin = padding.style.marginLeft;
-}
-else {
-   console.log("couldnt find layout or padding");
-}
-
-// ======= Format Media ========
-let content = $("#content");
-
-if (content) {
-   // Save original state to use when restoring
-   var paddingTop = content.style.paddingTop
-   var paddingRight = content.style.paddingRight
-   var paddingBottom = content.style.paddingBottom
-   var paddingLeft = content.style.paddingLeft
-}
-else {
-   console.log("couldnt find content");
-}
-
-// ======= Leftmost Navigation Column ========
-let navBar = $("#header.ic-app-header.no-print");
-
-//======= Title Heading =======
-let heading = $("h2");
-
-//====== Download Links below Title =======
-let targetSpan = $('div > span > a[download="true"]');
-if (targetSpan) {
-   var subHeading = targetSpan.parentNode.parentNode;
-} else {
-   console.log("subHeading not found");
-}
-
-console.log("Script loaded");
-
-// Listen for messages from the background script
-chrome.runtime.onMessage.addListener((message) => {
-   console.log("Message Received");
-   // Check the message
-   if (message.action === 'turnOn') {
-      EnterFullScreen();
-   }
-   else if (message.action === 'turnOff') {
-      ExitFullScreen();
+// Send a response to popup script indicating whether content script is ready or not
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+   if (message.action === "isContentScriptReady") {
+      const contentScriptReady = isActive
+      sendResponse({ contentScriptReady });
    }
 });
 
-// Enter Full Screen by hiding all elements except the content
-function EnterFullScreen() {
-   if (!fileContent) {
-      fileContent = $("#doc_preview > div")
+// Create alias for query selector
+function $(elem) {return document.querySelector(elem)}
+
+// Object to store DOM elements
+const domElements = {};
+
+function getDOMelements() {
+   var fileContent = null;
+    // Previous/Next Footer
+    domElements.nextbar = $("#sequence_footer");
+
+    // Left Side Navigation
+    domElements.leftLinksColumn = $("#left-side");
+
+    // Top Bar
+    domElements.topBar = $(".ic-app-nav-toggle-and-crumbs.no-print");
+
+    // Left Margin
+    domElements.layout = $("#main.ic-Layout-columns");
+    domElements.padding = $("#wrapper.ic-Layout-wrapper");
+    if (domElements.layout && domElements.padding) {
+      // Save original state to use when restoring
+      domElements.layoutMargin = domElements.layout.style.marginLeft;
+      domElements.paddingMargin = domElements.padding.style.marginLeft;
    }
-   nextbar.style.display = 'none';
-   leftLinksColumn.style.display = 'none';
-   topBar.style.display = 'none';
-   layout.style.marginLeft = "0";
-   padding.style.marginLeft = "0";
-   content.style.paddingTop = "0";
-   content.style.paddingRight = "0";
-   content.style.paddingBottom = "0";
-   content.style.paddingLeft = "0";
-   navBar.style.display = 'none';
-   heading.style.display = 'none';
-   subHeading.style.display = 'none';
-   console.log("Entered Full Screen!");
-   fileContent.style.overflow = 'visible';
+   else {
+      console.log("couldnt find layout or padding");
+   }
+
+    // Format Media
+    domElements.content = $("#content");
+    if (domElements.content) {
+      // Save original state to use when restoring
+      domElements.paddingTop = domElements.content.style.paddingTop
+      domElements.paddingRight = domElements.content.style.paddingRight
+      domElements.paddingBottom = domElements.content.style.paddingBottom
+      domElements.paddingLeft = domElements.content.style.paddingLeft
+   }
+   else {
+      console.log("couldnt find content");
+   }
+
+   // Leftmost Navigation Column
+   domElements.navBar = $("#header.ic-app-header.no-print");
+
+   // Title Heading
+   domElements.heading = $("h2");
+
+   // Download Links below Title
+   domElements.targetSpan = $('div > span > a[download="true"]');
+   if (domElements.targetSpan) {
+      domElements.subHeading = domElements.targetSpan.parentNode.parentNode;
+   } else {
+      console.log("subHeading not found");
+   }
 }
 
-// Exit full screen by reversing changes
+if (isActive) {
+   getDOMelements();
+   console.log("Content script is active!")
+} else {
+   console.log("Content script is inactive!")
+}
+
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((message) => {
+   if (isActive) {
+      console.log("Message Received");
+      // Check the message
+      if (message.action === 'turnOn') {
+         EnterFullScreen();
+      }
+      else if (message.action === 'turnOff') {
+         ExitFullScreen();
+   }}
+});
+
+// Enter full view by hiding all elements except the content
+function EnterFullScreen() {
+   if (!domElements.fileContent) {
+      domElements.fileContent = $("#doc_preview > div")
+   }
+   domElements.nextbar.style.display      = 'none';
+   domElements.leftLinksColumn.style.display = 'none';
+   domElements.topBar.style.display       = 'none';
+   domElements.layout.style.marginLeft    = "0";
+   domElements.padding.style.marginLeft   = "0";
+   domElements.content.style.paddingTop   = "0";
+   domElements.content.style.paddingRight = "0";
+   domElements.content.style.paddingBottom = "0";
+   domElements.content.style.paddingLeft  = "0";
+   domElements.navBar.style.display       = 'none';
+   domElements.heading.style.display      = 'none';
+   domElements.subHeading.style.display   = 'none';
+   domElements.fileContent.style.overflow = 'visible';
+   console.log("Entered Full Screen!");
+}
+
+// Exit full view by reversing changes
 function ExitFullScreen() {
-   subHeading.style.display = "block";
-   heading.style.display = "block";
-   navBar.style.display = "flex";
-   content.style.paddingBottom = paddingBottom
-   content.style.paddingTop = paddingTop
-   content.style.paddingLeft = paddingLeft
-   content.style.paddingRight = paddingRight
-   layout.style.marginLeft = layoutMargin
-   padding.style.marginLeft = paddingMargin
-   topBar.style.display = "flex";
-   leftLinksColumn.style.display = "block";
-   nextbar.style.display = "block";
-   fileContent.style.overflow = 'auto';
+   domElements.subHeading.style.display   = "block";
+   domElements.heading.style.display      = "block";
+   domElements.navBar.style.display       = "flex";
+   domElements.content.style.paddingBottom = domElements.paddingBottom
+   domElements.content.style.paddingTop    = domElements.paddingTop
+   domElements.content.style.paddingLeft   = domElements.paddingLeft
+   domElements.content.style.paddingRight  = domElements.paddingRight
+   domElements.layout.style.marginLeft     = domElements.layoutMargin
+   domElements.padding.style.marginLeft    = domElements.paddingMargin
+   domElements.topBar.style.display       = "flex";
+   domElements.leftLinksColumn.style.display = "block";
+   domElements.nextbar.style.display      = "block";
+   domElements.fileContent.style.overflow = 'auto';
    console.log("Page Restored!")
 }

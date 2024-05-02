@@ -1,0 +1,10 @@
+#fullscreen {
+    background-color: hsl(192, 51%, 69%);
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+#minimize {
+    background-color: hsl(27, 31%, 55%);
+    width: 100px;
+}
