@@ -1,18 +1,15 @@
 {
    "manifest_version": 3,
-   "name": "Canvas Fullscreen Tab",
-   "version": "0.1",
-   "description": "Makes Canvas files take up the whole window to faciliatate multitasking on a single screen",
+   "name": "Canvas Document Full View",
+   "version": "1",
+   "description": "Make Canvas files fill the window to faciliatate multitasking on a single screen",
    "action": {
-      "default_icon": "images/Canvas.png"
-   },
-   "background": {
-      "service_worker": "scripts/background.js",
-      "matches": ["https://fresnostate.instructure.com/courses/*/files/*"]
+      "default_icon": "images/Canvas.png",
+      "default_popup": "popup/popup.html"
    },
    "permissions": ["activeTab", "scripting", "declarativeContent"],
    "content_scripts": [{
-      "matches": ["https://fresnostate.instructure.com/courses/*/files/*"],
+      "matches": ["<all_urls>"],
       "js": ["scripts/content.js"]
    }]
 }
