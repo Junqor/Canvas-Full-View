@@ -13,16 +13,20 @@ async function updatePopup() {
             console.log("Canvas Full View is disabled on this page")
             const enlarge_btn = document.getElementById('fullscreen');
             const minimize_btn = document.getElementById('minimize');
+            const length_btn = document.getElementById('extend');
             enlarge_btn.disabled = true;
             minimize_btn.disabled = true;
+            length_btn.disabled = true;
         }
     } catch (error) {
         // Disable on an error as well
         console.log("Canvas Full View is disabled on this page")
         const enlarge_btn = document.getElementById('fullscreen');
         const minimize_btn = document.getElementById('minimize');
+        const length_btn = document.getElementById('extend');
         enlarge_btn.disabled = true;
         minimize_btn.disabled = true;
+        length_btn.disabled = true;
     }
 }
 
@@ -52,13 +56,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get active tab and send message to turn on functionality
     document.getElementById('fullscreen').addEventListener('click', async function() {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        const response = await chrome.tabs.sendMessage(tab.id, { action: "turnOn" });
+        await chrome.tabs.sendMessage(tab.id, { action: "turnOn" });
     });
 
     // Get active tab and send message to turn off functionality
     document.getElementById('minimize').addEventListener('click', async function() {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        const response = await chrome.tabs.sendMessage(tab.id, { action: "turnOff" });
+        await chrome.tabs.sendMessage(tab.id, { action: "turnOff" });
+    });
+
+    // Get active tab and send message to extend vertical length of full view
+    document.getElementById('extend').addEventListener('click', async function() {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        await chrome.tabs.sendMessage(tab.id, { action: "extend" });
     });
 
 });

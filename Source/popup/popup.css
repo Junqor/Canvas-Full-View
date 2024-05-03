@@ -2,9 +2,19 @@
     background-color: hsl(192, 51%, 69%);
     width: 100px;
     margin-bottom: 10px;
+    font-weight: 900;
 }
 
 #minimize {
-    background-color: hsl(27, 31%, 55%);
+    background-color: hsl(56, 31%, 55%);
     width: 100px;
+    margin-bottom: 10px;
+    font-weight: 900;
+}
+
+#extend {
+    background-color: hsl(0, 0%, 74%);
+    width: 100px;
+    margin-bottom: 10px;
+    font-weight: 900;
 }
