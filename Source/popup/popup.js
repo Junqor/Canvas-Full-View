@@ -11,21 +11,17 @@ async function updatePopup() {
         if (!isEnabled) {
             // Disable buttons
             console.log("Canvas Full View is disabled on this page")
-            const enlarge_btn = document.getElementById('fullscreen');
-            const minimize_btn = document.getElementById('minimize');
+            const view_btn = document.getElementById('change-view');
             const length_btn = document.getElementById('extend');
-            enlarge_btn.disabled = true;
-            minimize_btn.disabled = true;
+            view_btn.disabled = true;
             length_btn.disabled = true;
         }
     } catch (error) {
         // Disable on an error as well
         console.log("Canvas Full View is disabled on this page")
-        const enlarge_btn = document.getElementById('fullscreen');
-        const minimize_btn = document.getElementById('minimize');
+        const view_btn = document.getElementById('change-view');
         const length_btn = document.getElementById('extend');
-        enlarge_btn.disabled = true;
-        minimize_btn.disabled = true;
+        view_btn.disabled = true;
         length_btn.disabled = true;
     }
 }
@@ -53,16 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call the updatePopup function when the popup is opened
     updatePopup();
 
-    // Get active tab and send message to turn on functionality
-    document.getElementById('fullscreen').addEventListener('click', async function() {
+    // Get active tab and send message to change view between full and minimized
+    document.getElementById('change-view').addEventListener('click', async function() {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        await chrome.tabs.sendMessage(tab.id, { action: "turnOn" });
-    });
-
-    // Get active tab and send message to turn off functionality
-    document.getElementById('minimize').addEventListener('click', async function() {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        await chrome.tabs.sendMessage(tab.id, { action: "turnOff" });
+        await chrome.tabs.sendMessage(tab.id, { action: "switchView" });
     });
 
     // Get active tab and send message to extend vertical length of full view
