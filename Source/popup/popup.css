@@ -1,20 +1,35 @@
-#fullscreen {
-    background-color: hsl(192, 51%, 69%);
-    width: 100px;
-    margin-bottom: 10px;
-    font-weight: 900;
+/* Base button style */
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 900;
+  font-size: 14px;
 }
 
-#minimize {
-    background-color: hsl(56, 31%, 55%);
-    width: 100px;
-    margin-bottom: 10px;
-    font-weight: 900;
+/* #change-view button style */
+#change-view {
+  background-color: hsl(207, 93%, 56%);
+  width: 150px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+#change-view:hover:enabled {
+  background-color: hsl(214, 100%, 74%);
+  cursor: pointer;
+}
+
+/* #extend button style */
 #extend {
-    background-color: hsl(0, 0%, 74%);
-    width: 100px;
-    margin-bottom: 10px;
-    font-weight: 900;
+  background-color: hsl(0, 0%, 47%);
+  width: 150px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#extend:hover:enabled {
+  background-color: hsl(0, 0%, 64%);
+  cursor: pointer;
 }

@@ -16,29 +16,35 @@ function $(elem) {return document.querySelector(elem)}
 // Set to store DOM elements
 const domElements = {};
 
+let fullView = false;
+
 if (isActive) {
-   console.log("Content script is active!")
+   console.log("Canvas full view is active!")
    // Clone file display. Store both in set for later access
    domElements.newDisplay = $("#doc_preview").cloneNode(true);
    domElements.newDisplay.id = 'newFile';
    domElements.newDisplay.style.overflow = 'visible'
+   domElements.newDisplay.style.display = 'none';
    document.body.appendChild(domElements.newDisplay);
    domElements.originalDisplay = $('#application');
 } else {
-   console.log("Content script is inactive!")
+   console.log("Canvas full view is inactive!")
 }
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((message) => {
    if (isActive) {
       // Check the message
-      if (message.action === 'turnOn') {
-         EnterFullView();
-      }
-      else if (message.action === 'turnOff') {
-         ExitFullView();
-      }
-      else if (message.action === 'extend') {
+      if (message.action === 'switchView') {
+         switch (fullView) {
+            case true:
+               ExitFullView();
+               break;
+            case false:
+               EnterFullView();
+               break;
+         }
+      } else if (message.action === 'extend') {
          Extend();
    }}
 });
@@ -47,6 +53,7 @@ chrome.runtime.onMessage.addListener((message) => {
 function EnterFullView() {
    domElements.newDisplay.style.display = 'block';
    domElements.originalDisplay.style.display = 'none';
+   fullView = true;
    console.log("Entered Full View!");
 }
 
@@ -54,6 +61,7 @@ function EnterFullView() {
 function ExitFullView() {
    domElements.newDisplay.style.display = 'none'
    domElements.originalDisplay.style.display = 'block';
+   fullView = false;
    console.log("Page Restored!")
 }
 
