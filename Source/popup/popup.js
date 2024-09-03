@@ -12,17 +12,13 @@ async function updatePopup() {
             // Disable buttons
             console.log("Canvas Full View is disabled on this page")
             const view_btn = document.getElementById('change-view');
-            const length_btn = document.getElementById('extend');
             view_btn.disabled = true;
-            length_btn.disabled = true;
         }
     } catch (error) {
         // Disable on an error as well
         console.log("Canvas Full View is disabled on this page")
         const view_btn = document.getElementById('change-view');
-        const length_btn = document.getElementById('extend');
         view_btn.disabled = true;
-        length_btn.disabled = true;
     }
 }
 
@@ -53,12 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('change-view').addEventListener('click', async function() {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         await chrome.tabs.sendMessage(tab.id, { action: "switchView" });
-    });
-
-    // Get active tab and send message to extend vertical length of full view
-    document.getElementById('extend').addEventListener('click', async function() {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        await chrome.tabs.sendMessage(tab.id, { action: "extend" });
     });
 
 });
